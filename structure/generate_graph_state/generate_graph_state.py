@@ -1,5 +1,6 @@
 import numpy as np
 import qiskit
+from itertools import product
 
 
 print(qiskit.__version__)
@@ -54,6 +55,54 @@ def generate_stabilizer_generators(adjacency_matrix):
 
     return generators
 
+
+# Pauli group multiplication table with phases
+pauli_mul_with_phase = {
+    ('I', 'I'): ('I', 1),
+    ('I', 'X'): ('X', 1),
+    ('I', 'Y'): ('Y', 1),
+    ('I', 'Z'): ('Z', 1),
+    ('X', 'I'): ('X', 1),
+    ('X', 'X'): ('I', 1),
+    ('X', 'Y'): ('Z', 1j),
+    ('X', 'Z'): ('Y', -1j),
+    ('Y', 'I'): ('Y', 1),
+    ('Y', 'X'): ('Z', -1j),
+    ('Y', 'Y'): ('I', 1),
+    ('Y', 'Z'): ('X', 1j),
+    ('Z', 'I'): ('Z', 1),
+    ('Z', 'X'): ('Y', 1j),
+    ('Z', 'Y'): ('X', -1j),
+    ('Z', 'Z'): ('I', 1),
+}
+
+def pauli_string_multiply_with_phase(p1, p2):
+    """Multiply two Pauli strings with phase consideration."""
+    phase = 1
+    result = []
+    for a, b in zip(p1, p2):
+        r, p = pauli_mul_with_phase[(a, b)]
+        result.append(r)
+        phase *= p
+    return ''.join(result), phase
+
+def generate_stabilizer_group_with_phase(generators):
+    """Creates entire stabilizer group from generators."""
+    n = len(generators)
+    group = dict()
+    for coeffs in product([0, 1], repeat=n):
+        if all(c == 0 for c in coeffs):
+            result = 'I' * len(generators[0])
+            phase = 1
+        else:
+            result = 'I' * len(generators[0])
+            phase = 1
+            for i, c in enumerate(coeffs):
+                if c:
+                    result, p = pauli_string_multiply_with_phase(result, generators[i])
+                    phase *= p
+        group[result, phase] = True  # Set nutzen via dict keys
+    return sorted(group.keys())
 
 def main():
     # Example adjacency matrix for a 3-qubit graph state
