@@ -31,7 +31,7 @@ def generate_graph_state(adjacency_matrix):
 
     return qc
 
-def generate_stabilizers(adjacency_matrix):
+def generate_stabilizer_generators(adjacency_matrix):
     """
     Generate the stabilizers for a graph state based on the given adjacency matrix.
 
@@ -42,17 +42,17 @@ def generate_stabilizers(adjacency_matrix):
         list: A list of stabilizer strings.
     """
     num_qubits = len(adjacency_matrix)
-    stabilizers = []
+    generators = []
 
     for i in range(num_qubits):
-        stabilizer = ['I'] * num_qubits
-        stabilizer[i] = 'X'
+        generator = ['I'] * num_qubits
+        generator[i] = 'X'
         for j in range(num_qubits):
             if adjacency_matrix[i, j] != 0:
-                stabilizer[j] = 'Z' if stabilizer[j] == 'I' else 'I'
-        stabilizers.append(''.join(stabilizer))
+                generator[j] = 'Z' if generator[j] == 'I' else 'I'
+        generators.append(''.join(generator))
 
-    return stabilizers
+    return generators
 
 
 def main():
@@ -67,10 +67,10 @@ def main():
     print(qc)
 
     # Generate the stabilizers
-    stabilizers = generate_stabilizers(adjacency_matrix)
+    generators = generate_stabilizer_generators(adjacency_matrix)
     print("Stabilizers:")
-    for s in stabilizers:
-        print(s)
+    for g in generators:
+        print(g)
 
 if __name__ == "__main__":
     main()
@@ -79,14 +79,13 @@ if __name__ == "__main__":
 # The graph state is generated using Hadamard gates and controlled-phase gates.
 # The stabilizers are generated based on the adjacency matrix, where each stabilizer corresponds to a qubit in the graph state.
 # The stabilizers are represented as strings of 'X', 'Z', and 'I' (identity) operators.
-# The code is designed to be run as a standalone script, and it will print the quantum circuit and stabilizers to the console.
+
 # The adjacency matrix can be modified to generate different graph states.
 # The code uses the Qiskit library to create quantum circuits and manipulate qubits.
 # The generated quantum circuit can be executed on a quantum simulator or a real quantum computer using Qiskit.
 # The stabilizers can be used to analyze the properties of the graph state and perform measurements.
 # The code is structured into functions for better organization and reusability.
 # The main function serves as the entry point for the script, allowing for easy testing and execution.
-# The code is written in Python and follows standard coding conventions for readability and maintainability.
 # The adjacency matrix is defined as a NumPy array for efficient numerical operations.
 # The code is compatible with Python 3 and requires the Qiskit library to be installed.
 # The Qiskit library provides a comprehensive set of tools for quantum computing, including circuit creation, simulation, and execution.
@@ -94,6 +93,4 @@ if __name__ == "__main__":
 # The generated quantum circuit can be visualized using Qiskit's built-in visualization tools, such as the circuit drawer.
 # The stabilizers can be analyzed to understand the symmetries and properties of the graph state.
 # The code can be integrated into larger quantum computing projects or used as a standalone tool for generating and analyzing graph states.
-# The adjacency matrix can be easily modified to generate different graph states, allowing for flexibility in experimentation.
-# The code is designed to be modular, making it easy to add new features or modify existing functionality.
-# The code is well-documented, with clear comments explaining the purpose of each function and the overall workflow.
+
